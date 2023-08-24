@@ -43,7 +43,7 @@ export default function RenderPokemon() {
         fetchData();
     }, []); //useEffect end
 
-    const handleDiv = (pokemon) => {        
+    const handleDiv = (pokemon) => {
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -52,15 +52,23 @@ export default function RenderPokemon() {
             return array;
         }
         // add a function to turn flag to clicked
-        
-        if (pokemon.clicked === "false") {
-            setCount(count + 1);
-            pokemon.clicked = "true";
-            setPokemonData(shuffleArray([...pokemonData]));
-        }
-        else{
-            setGameOver(true);
-        }
+        // Updated each array to map and return a new array with the changes flag
+        // I AM STILL NOT SURE WHY WE HAVE TO RETURN p
+        const updatedPokemons = pokemonData.map(p => {
+            if (p.name === pokemon.name) {
+                if (p.clicked === "false") {
+                    setCount(count + 1);
+                    return {...p, clicked: "true"}
+                }
+                else{
+                    setGameOver(true);
+                    return p;
+                }
+            }
+            return p;
+        });
+
+        setPokemonData(shuffleArray(updatedPokemons));
     }
 
     if (gameOver) {
