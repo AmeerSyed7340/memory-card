@@ -1,8 +1,11 @@
-import { useEffect } from "react";
+import { useState, useEffect } from 'react'
 import '../styles/pokemon.css'
 
-export default function RenderPokemon({ pokemonData, setPokemonData }) {
+export default function RenderPokemon() {
 
+    const [pokemonData, setPokemonData] = useState([]);
+    const [count, setCount] = useState(0);
+    const [gameOver, setGameOver] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -40,8 +43,7 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
         fetchData();
     }, []); //useEffect end
 
-    const handleDiv = (event) => {
-        console.log(event.target.textContent);
+    const handleDiv = (pokemon) => {        
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -50,18 +52,34 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
             return array;
         }
         // add a function to turn flag to clicked
-        setPokemonData(shuffleArray([...pokemonData]));
+        
+        if (pokemon.clicked === "false") {
+            setCount(count + 1);
+            pokemon.clicked = "true";
+            setPokemonData(shuffleArray([...pokemonData]));
+        }
+        else{
+            setGameOver(true);
+        }
     }
 
+    if (gameOver) {
+        return (
+            <h1>Game Over</h1>
+        )
+    }
     return (
         <div className="main-content">
             {pokemonData.map((pokemon, index) => (
-                <div key={index} className="pokemon-container" onClick={handleDiv}>
+                <div key={index} className="pokemon-container" onClick={() => handleDiv(pokemon)}>
                     <img src={pokemon.sprites.front_default} alt="pokemon" />
                     <p>{pokemon.clicked}</p>
                 </div>
             ))}
 
+            <div className="count-tracker">
+                <p>{count}</p>
+            </div>
         </div>
     )
 }

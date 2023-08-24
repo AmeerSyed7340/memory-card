@@ -3,10 +3,9 @@ import RenderPokemon from './components/pokemon';
 import './App.css'
 
 function App() {
-  const [pokemonData, setPokemonData] = useState([]);
-
+  
   return (
-    <RenderPokemon pokemonData={pokemonData} setPokemonData={setPokemonData} />
+    <RenderPokemon />
   )
 }
 
