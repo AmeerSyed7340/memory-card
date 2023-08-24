@@ -1,0 +1,8 @@
+.main-content{
+    display: flex;
+    width: 200px;
+    gap: 20px;
+}
+.pokemon-container {
+    border: 1px solid green;
+}

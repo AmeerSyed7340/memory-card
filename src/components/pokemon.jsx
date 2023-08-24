@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import '../styles/pokemon.css'
 
 export default function RenderPokemon({ pokemonData, setPokemonData }) {
 
@@ -26,7 +27,7 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
                 //update the state
                 setPokemonData(allData.map((data, index) => ({
                     ...data,
-                    clicked: false
+                    clicked: "false"
                 })));
 
             }
@@ -40,6 +41,7 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
     }, []); //useEffect end
 
     const handleDiv = (event) => {
+        console.log(event.target.textContent);
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -52,11 +54,11 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
     }
 
     return (
-        <div>
+        <div className="main-content">
             {pokemonData.map((pokemon, index) => (
                 <div key={index} className="pokemon-container" onClick={handleDiv}>
                     <img src={pokemon.sprites.front_default} alt="pokemon" />
-                    <p>{pokemon.name}</p>
+                    <p>{pokemon.clicked}</p>
                 </div>
             ))}
 
