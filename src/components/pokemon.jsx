@@ -24,7 +24,11 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
                 const allData = await Promise.all(allResponses.map(res => res.json()));
 
                 //update the state
-                setPokemonData(allData);
+                setPokemonData(allData.map((data, index) => ({
+                    ...data,
+                    clicked: false
+                })));
+
             }
             catch (error) {
                 console.error(error.message);
@@ -35,7 +39,7 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
         fetchData();
     }, []); //useEffect end
 
-    const handleDiv = (event)=>{
+    const handleDiv = (event) => {
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -43,14 +47,16 @@ export default function RenderPokemon({ pokemonData, setPokemonData }) {
             }
             return array;
         }
+        // add a function to turn flag to clicked
         setPokemonData(shuffleArray([...pokemonData]));
     }
-    
+
     return (
         <div>
             {pokemonData.map((pokemon, index) => (
-                <div className="pokemon-container" onClick={handleDiv}>
-                    <img key={index} src={pokemon.sprites.front_default} alt="pokemon" />
+                <div key={index} className="pokemon-container" onClick={handleDiv}>
+                    <img src={pokemon.sprites.front_default} alt="pokemon" />
+                    <p>{pokemon.name}</p>
                 </div>
             ))}
 
