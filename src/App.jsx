@@ -3,9 +3,11 @@ import RenderPokemon from './components/pokemon';
 import './App.css'
 
 function App() {
-  
+
   return (
-    <RenderPokemon />
+    <div className='container'>
+      <RenderPokemon />
+    </div>
   )
 }
 

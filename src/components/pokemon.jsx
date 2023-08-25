@@ -5,6 +5,7 @@ export default function RenderPokemon() {
 
     const [pokemonData, setPokemonData] = useState([]);
     const [count, setCount] = useState(0);
+    const [bestScore, SetBestScore] = useState(0);
     const [gameOver, setGameOver] = useState(false);
 
     //globally defined for access
@@ -51,11 +52,19 @@ export default function RenderPokemon() {
 
         //Call the async function
         fetchData();
-    }, []); //useEffect end
+    }, []); //useEffect_1 end
+
+    //to synchronize the best score with current score we cannot simply set them equal to 
+    //one or the other. So, we must set as a side effect
+    useEffect(() => {
+        if (count >= bestScore) {
+            SetBestScore(count);
+        }
+    }, [count]) // useEffect_2 end
 
     const handleDiv = (pokemon) => {
         // check if it's clicked or not: if it's clicked 
-        
+
 
         if (pokemon.clicked === "true") {
             setGameOver(true);
@@ -81,8 +90,9 @@ export default function RenderPokemon() {
 
     const handleGameOver = () => {
         setGameOver(false);
+        setCount(0); // to reset the counter
         const updatedPokemons = pokemonData.map(p => {
-            return {...p, clicked: "false"};
+            return { ...p, clicked: "false" };
         })
         setPokemonData(shuffleArray(updatedPokemons));
     }//handleGameOver end
@@ -90,9 +100,20 @@ export default function RenderPokemon() {
     if (gameOver) {
         return (
             <div className='gameOver-container'>
-                <h1>Game Over</h1>
+                <h1>Game Over. You lost!</h1>
+                <button onClick={handleGameOver}>Restart</button>
+                <p>Best Score: {bestScore}</p>
+            </div>
+        )
+    }
+    else if (count === pokemonData.length) {
+        return (
+            <div>
+                <p>You Win! </p>
+                <p>Score: {bestScore}</p>
                 <button onClick={handleGameOver}>Restart</button>
             </div>
+
         )
     }
     return (
@@ -100,12 +121,13 @@ export default function RenderPokemon() {
             {pokemonData.map((pokemon, index) => (
                 <div key={index} className="pokemon-container" onClick={() => handleDiv(pokemon)}>
                     <img src={pokemon.sprites.front_default} alt="pokemon" />
-                    <p>{pokemon.clicked}</p>
+                    <h3>{pokemon.name}</h3>
                 </div>
             ))}
 
             <div className="count-tracker">
-                <p>{count}</p>
+                <p>Current Score: {count}</p>
+                <p>Best Score: {bestScore}</p>
             </div>
         </div>
     )
