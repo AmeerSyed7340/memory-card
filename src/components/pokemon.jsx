@@ -6,6 +6,16 @@ export default function RenderPokemon() {
     const [pokemonData, setPokemonData] = useState([]);
     const [count, setCount] = useState(0);
     const [gameOver, setGameOver] = useState(false);
+
+    //globally defined for access
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }//shufflearray
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -44,36 +54,45 @@ export default function RenderPokemon() {
     }, []); //useEffect end
 
     const handleDiv = (pokemon) => {
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+        // check if it's clicked or not: if it's clicked 
+        
+
+        if (pokemon.clicked === "true") {
+            setGameOver(true);
+            return;
         }
+
         // add a function to turn flag to clicked
         // Updated each array to map and return a new array with the changes flag
         // I AM STILL NOT SURE WHY WE HAVE TO RETURN p
+        //https://www.w3schools.com/howto/howto_js_remove_property_object.asp
         const updatedPokemons = pokemonData.map(p => {
             if (p.name === pokemon.name) {
-                if (p.clicked === "false") {
-                    setCount(count + 1);
-                    return {...p, clicked: "true"}
-                }
-                else{
-                    setGameOver(true);
-                    return p;
-                }
+                setCount(count + 1);
+                return { ...p, clicked: "true" }
             }
-            return p;
+            else {
+                return p;
+            }
         });
 
         setPokemonData(shuffleArray(updatedPokemons));
-    }
+    }//handleDiv end
+
+    const handleGameOver = () => {
+        setGameOver(false);
+        const updatedPokemons = pokemonData.map(p => {
+            return {...p, clicked: "false"};
+        })
+        setPokemonData(shuffleArray(updatedPokemons));
+    }//handleGameOver end
 
     if (gameOver) {
         return (
-            <h1>Game Over</h1>
+            <div className='gameOver-container'>
+                <h1>Game Over</h1>
+                <button onClick={handleGameOver}>Restart</button>
+            </div>
         )
     }
     return (
